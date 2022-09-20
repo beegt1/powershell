@@ -1,0 +1,12 @@
+##Outputs all Adgroup info specified & Exports to .csv file
+get-adgroup -filter * -Properties SamAccountName,GroupCategory,ManagedBy,mail, description |
+select SamAccountName,GroupCategory,ManagedBy,mail, description |
+Export-Csv "C:\Temp\AllGroups.csv" -NoTypeInformation 
+
+##Compares AD groups and outputs the difference & Showing who has who
+Compare-Object -ReferenceObject (Get-AdPrincipalGroupMembership 'domainID' | select name 
+| sort-object -Property name) -DifferenceObject (Get-AdPrincipalGroupMembership 'domainID' | select name | sort-object -Property name) -property name -passthru
+
+
+##Show AD groups of an user & description 
+Get-AdPrincipalGroupMembership 'domainID' | select name | sort-object -Property name
