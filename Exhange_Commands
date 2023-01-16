@@ -1,0 +1,8 @@
+##enable mailbox on prem
+Enable-RemoteMailbox -identity "test@officeworks.com.au" -remoteroutingaddress test@onet2.mail.onmicrosoft.com
+
+##enable archive on prem
+Enable-remotemailbox -identity "test@officeworks.com.au" -archive
+
+##View Creation Time - on prem
+Get-RemoteMailbox -Identity test@test.com.au | Select-Object Name,WhenMailboxCreated,PrimarySmtpAddress
