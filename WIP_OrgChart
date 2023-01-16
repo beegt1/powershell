@@ -1,0 +1,61 @@
+function Get-ADdirectReports
+{
+    PARAM ($SamAccountName)
+
+    $AllUsers = @()
+
+    $Manager = Get-Aduser -identity $SamAccountName -Properties DistinguishedName,CN,co,city,DisplayName,mail
+    
+    $DirectReports = Get-ADUser -Filter {Manager -eq $Manager.DistinguishedName} -Properties manager
+
+    $Manager = New-Object -TypeName psobject -Property @{ 
+                                                "Name" = $Manager.DisplayName
+                                                "Country" = $Manager.co
+                                                "City" = $Manager.city
+                                                "Email" = $Manager.mail
+                                                "UserName" = $Manager.SamAccountName
+                                                "Direct Reports" = $DirectReports | 
+                                                    foreach { 
+                                                        Get-ADdirectReports $_.SamAccountName 
+                                                    } 
+                                                }
+
+    return $Manager
+}
+
+
+
+  Function Out-JSONView  {
+
+  [cmdletbinding()]
+
+  Param (
+
+  [parameter(ValueFromPipeline)]
+
+  [psobject]$InbutObject,
+  [int]$Depth = 2
+
+  )
+
+  $JSON = @($Input) | ConvertTo-Json -Depth $Depth | Out-String
+
+
+
+
+  }
+  
+Function Get-OrgChart  {
+
+  [cmdletbinding()]
+
+  Param (
+
+    $SamAccountName
+
+  )
+
+    Get-ADdirectReports -SamAccountName $SamAccountName | Out-JSONView -Depth 9
+  
+
+  }
