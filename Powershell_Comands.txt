@@ -10,3 +10,6 @@ Compare-Object -ReferenceObject (Get-AdPrincipalGroupMembership 'domainID' | sel
 
 ##Show AD groups of an user & description 
 Get-AdPrincipalGroupMembership 'domainID' | select name | sort-object -Property name
+
+##AD groups of an user & description - exported into csv for visiblitlty 
+Get-AdPrincipalGroupMembership 'domainID' | Get-ADGroup -Properties * | select name, description | Export-Csv C:\TEst\test12.csv
