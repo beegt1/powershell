@@ -1,0 +1,41 @@
+
+#Import CSV
+
+##import list names
+$groups = Import-Csv ‘C:\Test\\BulkCreateADGroups.csv‘
+
+ 
+
+ 
+
+# Loop through the CSV
+
+    foreach ($group in $groups) {
+
+ 
+
+    $groupProps = @{
+
+ 
+
+      Name          = $group.name
+
+      Path          = $group.path
+
+      GroupScope    = $group.scope
+
+      GroupCategory = $group.category
+
+      Description   = $group.description
+
+     ManagedBy                = $group.managedby
+
+      }#end groupProps
+
+ 
+
+    New-ADGroup @groupProps
+
+   
+
+} #end foreach loop
